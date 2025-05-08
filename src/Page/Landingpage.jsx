@@ -431,82 +431,114 @@ const Landingpage = () => {
           </div>
         </div>
       </div>
-      <h1 className="border-4 border-black w-full mt-8  "></h1>
-      <div className="flex justify-center   px-4   bg-[#f3f3f3] w-full">
-  
+      
+      <div className="px-4 bg-[#f3f3f3] w-full">
+      <h1 className="border-4 border-black w-full mt-8"></h1>
 
-  <div className="flex flex-col md:flex-row md:justify-between items-start gap-8 text-sm font-medium py-4 mt-5">
-    <div className="flex flex-col gap-6 font-bold w-full md:w-1/5">
-      <h2>OUR AGENCY</h2>
-      <div className="font-normal space-y-2">
-        <h1>About IRS</h1>
-        <h1>Careers</h1>
-        <h1>Operations and Budget</h1>
-        <h1>Tax Statistics</h1>
-        <h1>Help</h1>
-        <h1>Find a Local Office</h1>
-      </div>
-    </div>
+      <div className="flex flex-col md:flex-row md:justify-between items-start gap-8 text-sm font-medium py-4 mt-5">
+        {/* OUR AGENCY */}
+        <div className="w-full md:w-1/5">
+          <h2
+            onClick={() => setOpenAgency(!openAgency)}
+            className="cursor-pointer flex items-center gap-2 font-bold md:cursor-default"
+          >
+            + OUR AGENCY
+          </h2>
+          <div className={`space-y-2 font-normal ${openAgency ? "block" : "hidden"} md:block`}>
+            <h1>About IRS</h1>
+            <h1>Careers</h1>
+            <h1>Operations and Budget</h1>
+            <h1>Tax Statistics</h1>
+            <h1>Help</h1>
+            <h1>Find a Local Office</h1>
+          </div>
+        </div>
 
-    <div className="w-full md:w-1/5">
-      <h2 className="font-bold">KNOW YOUR RIGHTS</h2>
-      <div className="space-y-2 font-normal">
-        <h1>Taxpayer Bill of Rights</h1>
-        <h1>Taxpayer Advocate Service</h1>
-        <h1>Independent Office of Appeals</h1>
-        <h1>Civil Rights</h1>
-        <h1>FOIA</h1>
-        <h1>No FEAR Act Data</h1>
-        <h1>Reliance on Guidance</h1>
-      </div>
-    </div>
+        {/* KNOW YOUR RIGHTS */}
+        <div className="w-full md:w-1/5">
+          <h2
+            onClick={() => setOpenRights(!openRights)}
+            className="cursor-pointer flex items-center gap-2 font-bold md:cursor-default"
+          >
+            + KNOW YOUR RIGHTS
+          </h2>
+          <div className={`space-y-2 font-normal ${openRights ? "block" : "hidden"} md:block`}>
+            <h1>Taxpayer Bill of Rights</h1>
+            <h1>Taxpayer Advocate Service</h1>
+            <h1>Independent Office of Appeals</h1>
+            <h1>Civil Rights</h1>
+            <h1>FOIA</h1>
+            <h1>No FEAR Act Data</h1>
+            <h1>Reliance on Guidance</h1>
+          </div>
+        </div>
 
-    <div className="w-full md:w-1/5">
-      <h2 className="font-bold">RESOLVE AN ISSUE</h2>
-      <div className="space-y-2 font-normal">
-        <h1>IRS Notices and Letters</h1>
-        <h1>Identity Theft</h1>
-        <h1>Tax scams</h1>
-        <h1>Tax Fraud</h1>
-        <h1>Criminal Investigation</h1>
-        <h1>Whistleblower Office</h1>
-      </div>
-    </div>
+        {/* RESOLVE AN ISSUE */}
+        <div className="w-full md:w-1/5">
+          <h2
+            onClick={() => setOpenIssue(!openIssue)}
+            className="cursor-pointer flex items-center gap-2 font-bold md:cursor-default"
+          >
+            + RESOLVE AN ISSUE
+          </h2>
+          <div className={`space-y-2 font-normal ${openIssue ? "block" : "hidden"} md:block`}>
+            <h1>IRS Notices and Letters</h1>
+            <h1>Identity Theft</h1>
+            <h1>Tax scams</h1>
+            <h1>Tax Fraud</h1>
+            <h1>Criminal Investigation</h1>
+            <h1>Whistleblower Office</h1>
+          </div>
+        </div>
 
-    <div className="w-full md:w-1/5">
-      <h2 className="font-bold">LANGUAGES</h2>
-      <div className="space-y-2 font-normal">
-        <h1>Español</h1>
-        <h1>中文 (简体)</h1>
-        <h1>中文 (繁體)</h1>
-        <h1>한국어</h1>
-        <h1>Pусский</h1>
-        <h1>Tiếng Việt</h1>
-        <h1>Kreyòl ayisyen</h1>
-        <h1>English</h1>
-        <h1>Other Languages</h1>
-      </div>
-    </div>
+        {/* LANGUAGES */}
+        <div className="w-full md:w-1/5">
+          <h2
+            onClick={() => setOpenLanguages(!openLanguages)}
+            className="cursor-pointer flex items-center gap-2 font-bold md:cursor-default"
+          >
+            + LANGUAGES
+          </h2>
+          <div className={`space-y-2 font-normal ${openLanguages ? "block" : "hidden"} md:block`}>
+            <h1>Español</h1>
+            <h1>中文 (简体)</h1>
+            <h1>中文 (繁體)</h1>
+            <h1>한국어</h1>
+            <h1>Pусский</h1>
+            <h1>Tiếng Việt</h1>
+            <h1>Kreyòl ayisyen</h1>
+            <h1>English</h1>
+            <h1>Other Languages</h1>
+          </div>
+        </div>
 
-    <div className="w-full md:w-1/5">
-      <h2 className="font-bold">RELATED SITES</h2>
-      <div className="space-y-2 font-normal">
-        <h1>U.S. Treasury</h1>
-        <h1>Treasury Inspector General for Tax Administration</h1>
-        <h1>USA.gov</h1>
-        <h1>U.S. Department of the Treasury</h1>
-        <h1>Vote.gov</h1>
+        {/* RELATED SITES */}
+        <div className="w-full md:w-1/5">
+          <h2
+            onClick={() => setOpenRelated(!openRelated)}
+            className="cursor-pointer flex items-center gap-2 font-bold md:cursor-default"
+          >
+            + RELATED SITES
+          </h2>
+          <div className={`space-y-2 font-normal ${openRelated ? "block" : "hidden"} md:block`}>
+            <h1>U.S. Treasury</h1>
+            <h1>Treasury Inspector General for Tax Administration</h1>
+            <h1>USA.gov</h1>
+            <h1>U.S. Department of the Treasury</h1>
+            <h1>Vote.gov</h1>
+          </div>
+        </div>
       </div>
+
+      {/* Social Icons */}
+         <div className="flex gap-3 mt-4 sm:justify-start justify-end lg:justify-end">
+     <ImFacebook2 size={20} />
+     <FaSquareXTwitter size={20} />
+     <FaInstagram size={20} />
+     <FaLinkedin size={20} />
+     <IoLogoYoutube size={20} />
+   </div>
     </div>
-  </div>
-   <div className="flex gap-3  mt-[400px]">
-  <ImFacebook2  size={20}/>
-      <FaSquareXTwitter size={20} />
-      <FaInstagram size={20} />
-      <FaLinkedin size={20} />
-      <IoLogoYoutube  size={20}/>
-  </div>
-</div>
 
 
       <Footer />

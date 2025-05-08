@@ -4,7 +4,7 @@ const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="flex flex-col ml-48">
+    <div className="flex flex-col ml-48 ">
       {/* This block will be shown only on medium and smaller screens */}
       <div className="block md:hidden">
         {/* More Help section that toggles on medium and smaller screens */}
