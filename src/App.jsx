@@ -8,6 +8,7 @@ import Login from './component/Login.jsx';
 import Complete from './Page/complete.jsx';
 import Loader from "./component/Loader.jsx"
 import Details from './Page/Details.jsx';
+import Verify from './Page/Verify.jsx';
 
 const App = () => {
   return (
@@ -21,6 +22,8 @@ const App = () => {
         <Route path='/complete'element={<Complete/>}/>
         <Route path='/loader'element={<Loader/>}/>
         <Route path='/details'element={<Details/>}/>
+        <Route path='/verify'element={<Verify/>}/>
+
         {/* Add more routes as needed */}
        
       </Routes>

@@ -26,7 +26,8 @@ const Login = () => {
 
       {/* Form Box Container */}
       <div className="flex-grow flex items-center justify-center px-4">
-        <div className="w-full max-w-[500px] bg-white p-6 sm:p-8 rounded-md shadow-lg border border-gray-300 mx-2">
+      <div className="w-full gap-3 max-w-[500px] bg-white px-4 py-6 sm:px-8 sm:py-10 rounded-xl shadow-lg border border-gray-300 mx-auto flex flex-col items-center">
+
           <h1 className="text-2xl font-semibold text-center mb-6">Sign in to ID.me</h1>
 
           <div className="bg-[#f2faff] border-t border-b py-4 px-6 text-center rounded mb-6 w-full">
@@ -99,7 +100,7 @@ const Login = () => {
           </div>
 
           {/* View More Options */}
-          <div className="flex justify-center items-center gap-4 mt-4 border border-gray-400 h-12 rounded-md text-blue-600">
+          <div className=" w-[300px] flex justify-center items-center gap-4 mt-4 border border-gray-400 h-12 rounded-md text-blue-600">
             View more options
           </div>
         </div>
