@@ -9,7 +9,7 @@ import Complete from "./component/Complete.jsx";
 import Loader from "./component/Loader.jsx"
 import Details from './Page/Details.jsx';
 import Verify from './Page/Verify.jsx';
-import Personal from './Page/personal.jsx';
+import Personal from './component/Personal.jsx';
 import Successful from './Page/Successful.jsx';
 
 const App = () => {
