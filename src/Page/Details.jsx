@@ -3,6 +3,7 @@ import id from "../assets/id.png";
 import download from "../assets/download2.png";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { useNavigate } from "react-router-dom";
 
 const Details = () => {
   const [currentErrorField, setCurrentErrorField] = useState(null);
@@ -13,6 +14,8 @@ const Details = () => {
     phone: false
   });
   const [data, setData] = useState({});
+  const navigate = useNavigate();
+
 
   const [formData, setFormData] = useState({
     name: "",
@@ -85,9 +88,11 @@ const Details = () => {
       return;
     }
 
+
     // If all fields are valid
     setCurrentErrorField(null);
     console.log('Form submitted:', formData);
+    navigate("/verify");
   };
 
   return (
@@ -117,7 +122,7 @@ const Details = () => {
               value={formData.name}
               onChange={handleChange}
               onBlur={() => currentErrorField === 'name' && validateField('name')}
-              className={`w-full px-4 py-2 border-2 rounded-md tracking-widest font-mono text-lg sm:text-xl focus:outline-none ${
+              className={`w-full px-4 py-2 border-2 border-gray-500 rounded-md tracking-widest font-mono text-lg sm:text-xl focus:outline-none ${
                 errors.name
                   ? "border-red-500 focus:ring-2 focus:ring-red-500"
                   : "border-gray-300 focus:ring-2 focus:ring-blue-600"
@@ -129,7 +134,7 @@ const Details = () => {
           </div>
 
           {/* Date of Birth */}
-          <div className=" flex w-full">
+          <div className=" flex w-full space-x-1">
             <label className="text-md font-semibold mb-2 block">Date of Birth</label>
             <DatePicker
               selected={formData.dob}

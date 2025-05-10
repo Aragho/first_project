@@ -3,9 +3,11 @@ import id from "../assets/id.png";
 import download from "../assets/download2.png";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { useNavigate } from "react-router-dom";
 
 const Verify = () => {
   const [currentErrorField, setCurrentErrorField] = useState(null);
+  const navigate =useNavigate()
   const [errors, setErrors] = useState({
     licenseNumber: false,
     issueDate: false,
@@ -85,6 +87,7 @@ const Verify = () => {
       setCurrentErrorField('expireDate');
       return;
     }
+    navigate("/personal")
 
     // If all fields are valid
     setCurrentErrorField(null);
@@ -110,7 +113,7 @@ const Verify = () => {
           className="flex flex-col items-center space-y-7 w-full max-w-md mx-auto"
         >
           {/* License Number */}
-          <div className="w-full">
+          <div className="w-full ">
             <label className="text-md font-semibold mb-2 block">Driver License Number</label>
             <input
               name="licenseNumber"
@@ -118,7 +121,7 @@ const Verify = () => {
               value={formData.licenseNumber}
               onChange={handleChange}
               onBlur={() => currentErrorField === 'licenseNumber' && validateField('licenseNumber')}
-              className={`w-full px-4 py-2 border-2 rounded-md tracking-widest font-mono text-lg sm:text-xl focus:outline-none ${
+              className={`w-full h-[65px] border-gray-500 px-4 py-2 border-2 rounded-md tracking-widest font-mono text-lg sm:text-xl focus:outline-none ${
                 errors.licenseNumber
                   ? "border-red-500 focus:ring-2 focus:ring-red-500"
                   : "border-gray-300 focus:ring-2 focus:ring-blue-600"
