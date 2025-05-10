@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import id from "../assets/id.png";
-import Loader from "../component/Loader";
+import Loader from "./Loader";
 import { FaRegCommentAlt } from "react-icons/fa";
 
 const Complete = () => {
