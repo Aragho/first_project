@@ -102,7 +102,8 @@ const Complete = () => {
                 </label>
                 <input
                   ref={inputRef}
-                  type="text"
+                  type="number"
+                  inputMode="numeric"
                   value={code}
                   onChange={handleCodeChange}
                   maxLength="6"

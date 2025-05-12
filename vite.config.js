@@ -3,9 +3,6 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  server: {
-    historyApiFallback: true, // ensures SPA routing works in dev
-  },
   build: {
     outDir: 'dist',
   }
