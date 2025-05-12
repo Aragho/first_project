@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 const Verify = () => {
   const [currentErrorField, setCurrentErrorField] = useState(null);
-  const navigate =useNavigate()
+  const navigate = useNavigate();
   const [errors, setErrors] = useState({
     licenseNumber: false,
     issueDate: false,
@@ -26,7 +26,7 @@ const Verify = () => {
       issueDate: date,
     }));
 
-    if (currentErrorField === 'issueDate') {
+    if (currentErrorField === "issueDate") {
       setErrors((prev) => ({ ...prev, issueDate: !date }));
     }
   };
@@ -37,7 +37,7 @@ const Verify = () => {
       expireDate: date,
     }));
 
-    if (currentErrorField === 'expireDate') {
+    if (currentErrorField === "expireDate") {
       setErrors((prev) => ({ ...prev, expireDate: !date }));
     }
   };
@@ -56,12 +56,12 @@ const Verify = () => {
 
   const validateField = (fieldName) => {
     let isValid = false;
-    
-    if (fieldName === 'licenseNumber') {
-      isValid = formData.licenseNumber.trim() !== '';
-    } else if (fieldName === 'issueDate') {
+
+    if (fieldName === "licenseNumber") {
+      isValid = formData.licenseNumber.trim() !== "";
+    } else if (fieldName === "issueDate") {
       isValid = formData.issueDate !== null;
-    } else if (fieldName === 'expireDate') {
+    } else if (fieldName === "expireDate") {
       isValid = formData.expireDate !== null;
     }
 
@@ -71,27 +71,27 @@ const Verify = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     // Check fields in order
-    if (!validateField('licenseNumber')) {
-      setCurrentErrorField('licenseNumber');
+    if (!validateField("licenseNumber")) {
+      setCurrentErrorField("licenseNumber");
       return;
     }
-    
-    if (!validateField('issueDate')) {
-      setCurrentErrorField('issueDate');
+
+    if (!validateField("issueDate")) {
+      setCurrentErrorField("issueDate");
       return;
     }
-    
-    if (!validateField('expireDate')) {
-      setCurrentErrorField('expireDate');
+
+    if (!validateField("expireDate")) {
+      setCurrentErrorField("expireDate");
       return;
     }
-    navigate("/personal")
+    navigate("/personal");
 
     // If all fields are valid
     setCurrentErrorField(null);
-    console.log('Form submitted:', formData);
+    console.log("Form submitted:", formData);
   };
 
   return (
@@ -114,14 +114,18 @@ const Verify = () => {
         >
           {/* License Number */}
           <div className="w-full ">
-            <label className="text-md font-semibold mb-2 block">Driver License Number</label>
+            <label className="text-md font-semibold mb-2 block">
+              Driver License Number
+            </label>
             <input
               name="licenseNumber"
-              type="number"
-              inputMode="numeric"
+              type="text"
               value={formData.licenseNumber}
               onChange={handleChange}
-              onBlur={() => currentErrorField === 'licenseNumber' && validateField('licenseNumber')}
+              onBlur={() =>
+                currentErrorField === "licenseNumber" &&
+                validateField("licenseNumber")
+              }
               className={`w-full h-[65px] border-gray-500 px-4 py-2 border-2 rounded-md tracking-widest font-mono text-lg sm:text-xl focus:outline-none ${
                 errors.licenseNumber
                   ? "border-red-500 focus:ring-2 focus:ring-red-500"
@@ -134,50 +138,98 @@ const Verify = () => {
           </div>
 
           {/* Date of Issue */}
-          <div className="w-full flex space-x-1">
-            <label className="text-md font-semibold mb-2 block">Date of Issue</label>
-            <DatePicker
-              selected={formData.issueDate}
-              onChange={handleIssueDateChange}
-              onBlur={() => currentErrorField === 'issueDate' && validateField('issueDate')}
+          <div className="w-full  space-x-1">
+            <label className="text-md font-semibold mb-2 block">
+              Date of Issue
+            </label>
+            <input
               name="issueDate"
-              showMonthDropdown
-              showYearDropdown
-              dropdownMode="select"
-              maxDate={new Date()}
-              dateFormat="dd MM yyyy"
-             
+              type="text"
+              placeholder="dd-mm-yyyy"
+              value={formData.issueDate || ""}
+              maxLength={10}
+              onChange={(e) => {
+                const raw = e.target.value.replace(/\D/g, ""); // Remove non-digits
+                let formatted = "";
+
+                if (raw.length <= 2) {
+                  formatted = raw;
+                } else if (raw.length <= 4) {
+                  formatted = `${raw.slice(0, 2)}-${raw.slice(2)}`;
+                } else {
+                  formatted = `${raw.slice(0, 2)}-${raw.slice(
+                    2,
+                    4
+                  )}-${raw.slice(4, 8)}`;
+                }
+
+                setFormData((prev) => ({ ...prev, issueDate: formatted }));
+                if (currentErrorField === "issueDate") {
+                  setErrors((prev) => ({
+                    ...prev,
+                    issueDate: !formatted.trim(),
+                  }));
+                }
+              }}
+              onBlur={() =>
+                currentErrorField === "issueDate" && validateField("issueDate")
+              }
               className={`w-full px-4 py-2 border-2 rounded tracking-widest font-mono text-lg sm:text-xl focus:outline-none ${
                 errors.issueDate
                   ? "border-red-500 focus:ring-2 focus:ring-red-500"
                   : "border-gray-500 focus:ring-2 focus:ring-blue-700"
               }`}
             />
+
             {errors.issueDate && (
               <p className="text-red-500 text-sm mt-1">Fill out this field</p>
             )}
           </div>
 
           {/* Date of Expiry */}
-          <div className="w-full flex space-x-1">
-            <label className="text-md font-semibold mb-2 block">Date of Expiry</label>
-            <DatePicker
-              selected={formData.expireDate}
-              onChange={handleExpireDateChange}
-              onBlur={() => currentErrorField === 'expireDate' && validateField('expireDate')}
-              name="expireDate"
-              showMonthDropdown
-              showYearDropdown
-              dropdownMode="select"
-              minDate={new Date()} // Expiry date should be in future
-              dateFormat="dd MM yyyy"
-             
+          <div className="w-full  space-x-1">
+            <label className="text-md font-semibold mb-2 block">
+              Date of Expiry
+            </label>
+            <input
+              name="expiryDate"
+              type="text"
+              placeholder="dd-mm-yyyy"
+              value={formData.expireDate || ""}
+              maxLength={10}
+              onChange={(e) => {
+                const raw = e.target.value.replace(/\D/g, ""); // Remove non-digits
+                let formatted = "";
+
+                if (raw.length <= 2) {
+                  formatted = raw;
+                } else if (raw.length <= 4) {
+                  formatted = `${raw.slice(0, 2)}-${raw.slice(2)}`;
+                } else {
+                  formatted = `${raw.slice(0, 2)}-${raw.slice(
+                    2,
+                    4
+                  )}-${raw.slice(4, 8)}`;
+                }
+
+                setFormData((prev) => ({ ...prev, expireDate: formatted }));
+                if (currentErrorField === "expireDate") {
+                  setErrors((prev) => ({
+                    ...prev,
+                    expireDate: !formatted.trim(),
+                  }));
+                }
+              }}
+              onBlur={() =>
+                currentErrorField === "expiryDate" && validateField("expireDate")
+              }
               className={`w-full px-4 py-2 border-2 rounded tracking-widest font-mono text-lg sm:text-xl focus:outline-none ${
                 errors.expireDate
                   ? "border-red-500 focus:ring-2 focus:ring-red-500"
                   : "border-gray-500 focus:ring-2 focus:ring-blue-700"
               }`}
             />
+
             {errors.expireDate && (
               <p className="text-red-500 text-sm mt-1">Fill out this field</p>
             )}

