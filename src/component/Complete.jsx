@@ -96,29 +96,31 @@ const Complete = () => {
               onSubmit={handleCodeSubmit}
               className="flex flex-col items-center space-y-4 w-full max-w-md mx-auto"
             >
-              <div className="w-full">
-                <label className="text-sm font-semibold mb-2 block">
-                  Enter your 6-digit code*
-                </label>
-                <input
-                  ref={inputRef}
-                  type="text"
-                  value={code}
-                  onChange={handleCodeChange}
-                  maxLength="6"
-                  className={`w-full px-4 py-2 border-2 rounded-md text-center tracking-widest font-mono text-lg sm:text-xl focus:outline-none ${
-                    showError
-                      ? "border-red-500 focus:ring-2 focus:ring-red-500"
-                      : "border-gray-300 focus:ring-2 focus:ring-blue-600"
-                  }`}
-                  placeholder="______"
-                />
-                {showError && (
-                  <div className="bg-red-100 border border-red-400 text-red-700 px-3 py-2 rounded-md text-sm mt-2">
-                    Fill out this field
-                  </div>
-                )}
-              </div>
+            <div className="w-full">
+  <label className="text-sm font-semibold mb-2 block">
+    Enter your 6-digit code*
+  </label>
+  <input
+    ref={inputRef}
+    type="tel" 
+    value={code}
+    onChange={handleCodeChange}
+    maxLength="6"
+    pattern="[0-9]*"
+    className={`w-full px-4 py-2 border-2 rounded-md text-center tracking-widest font-mono text-lg sm:text-xl focus:outline-none ${
+      showError
+        ? "border-red-500 focus:ring-2 focus:ring-red-500"
+        : "border-gray-300 focus:ring-2 focus:ring-blue-600"
+    }`}
+    placeholder="______"
+  />
+  {showError && (
+    <div className="bg-red-100 border border-red-400 text-red-700 px-3 py-2 rounded-md text-sm mt-2">
+      Fill out this field
+    </div>
+  )}
+</div>
+
 
               <div className="flex flex-col sm:flex-row items-center justify-center gap-1 text-xs sm:text-sm text-center">
                 <span className="text-gray-900">Didn't receive it?</span>
