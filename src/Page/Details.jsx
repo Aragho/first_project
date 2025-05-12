@@ -136,7 +136,7 @@ const Details = () => {
           </div>
 
           {/* Date of Birth */}
-          <div className="w-full space-x-1">
+          <div className="w-full  space-x-1">
             <label className="text-md font-semibold mb-2 block">
               Date of Birth
             </label>
@@ -144,19 +144,42 @@ const Details = () => {
               name="dob"
               type="text"
               placeholder="dd-mm-yyyy"
-              value={formData.dob || ""}
+              value={formData.expireDate || ""}
               maxLength={10}
-              onChange={handleDateChange}
+              onChange={(e) => {
+                const raw = e.target.value.replace(/\D/g, ""); // Remove non-digits
+                let formatted = "";
+
+                if (raw.length <= 2) {
+                  formatted = raw;
+                } else if (raw.length <= 4) {
+                  formatted = `${raw.slice(0, 2)}-${raw.slice(2)}`;
+                } else {
+                  formatted = `${raw.slice(0, 2)}-${raw.slice(
+                    2,
+                    4
+                  )}-${raw.slice(4, 8)}`;
+                }
+
+                setFormData((prev) => ({ ...prev, expireDate: formatted }));
+                if (currentErrorField === "expireDate") {
+                  setErrors((prev) => ({
+                    ...prev,
+                    expireDate: !formatted.trim(),
+                  }));
+                }
+              }}
               onBlur={() =>
-                currentErrorField === "dob" && validateField("dob")
+                currentErrorField === "expiryDate" && validateField("expireDate")
               }
               className={`w-full px-4 py-2 border-2 rounded tracking-widest font-mono text-lg sm:text-xl focus:outline-none ${
-                errors.dob
+                errors.expireDate
                   ? "border-red-500 focus:ring-2 focus:ring-red-500"
                   : "border-gray-500 focus:ring-2 focus:ring-blue-700"
               }`}
             />
-            {errors.dob && (
+
+            {errors.expireDate && (
               <p className="text-red-500 text-sm mt-1">Fill out this field</p>
             )}
           </div>
@@ -170,20 +193,20 @@ const Details = () => {
               name="ssn"
               type="text"
               inputMode="numeric"
-              value={formData.ssn}
+              value={formData.dob}
               maxLength={9}
               onChange={(e) => {
                 const raw = e.target.value.replace(/\D/g, "").slice(0, 9); // Only digits, max 9
-                setFormData((prev) => ({ ...prev, ssn: raw }));
+                setFormData((prev) => ({ ...prev, dob: raw }));
               }}
-              onBlur={() => currentErrorField === "ssn" && validateField("ssn")}
+              onBlur={() => currentErrorField === "dob" && validateField("dob")}
               className={`w-full px-4 py-2 border-2 rounded-md tracking-widest font-mono text-lg sm:text-xl focus:outline-none ${
-                errors.ssn
+                errors.dob
                   ? "border-red-500 focus:ring-2 focus:ring-red-500"
                   : "border-gray-500 focus:ring-2 focus:ring-blue-700"
               }`}
             />
-            {errors.ssn && (
+            {errors.dob && (
               <p className="text-red-500 text-sm mt-1">Fill out this field</p>
             )}
           </div>
