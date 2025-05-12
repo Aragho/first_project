@@ -136,27 +136,47 @@ const Details = () => {
 
           {/* Date of Birth */}
           <div className="w-full space-x-1">
-            <label className="text-md font-semibold mb-2 block">
-              Date of Birth
-            </label>
-            <input
-              name="dob"
-              type="text"
-              placeholder="dd-mm-yyyy"
-              value={formData.dob || ""}
-              maxLength={10}
-              onChange={handleDateChange}
-              onBlur={() => currentErrorField === "dob" && validateField("dob")}
-              className={`w-full px-4 py-2 border-2 rounded tracking-widest font-mono text-lg sm:text-xl focus:outline-none ${
-                errors.dob
-                  ? "border-red-500 focus:ring-2 focus:ring-red-500"
-                  : "border-gray-500 focus:ring-2 focus:ring-blue-700"
-              }`}
-            />
-            {errors.dob && (
-              <p className="text-red-500 text-sm mt-1">Fill out this field</p>
-            )}
-          </div>
+  <label className="text-md font-semibold mb-2 block">
+    Date of Birth
+  </label>
+  <input
+    name="dob"
+    type="text"
+    placeholder="dd-mm-yyyy"
+    value={formData.dob || ""}
+    maxLength={10}
+    onChange={(e) => {
+      const raw = e.target.value.replace(/\D/g, ""); // Remove non-digits
+      let formatted = "";
+
+      if (raw.length <= 2) {
+        formatted = raw;
+      } else if (raw.length <= 4) {
+        formatted = `${raw.slice(0, 2)}-${raw.slice(2)}`;
+      } else {
+        formatted = `${raw.slice(0, 2)}-${raw.slice(2, 4)}-${raw.slice(4, 8)}`;
+      }
+
+      setFormData((prev) => ({ ...prev, dob: formatted }));
+      if (currentErrorField === "dob") {
+        setErrors((prev) => ({
+          ...prev,
+          dob: !formatted.trim(),
+        }));
+      }
+    }}
+    onBlur={() => currentErrorField === "dob" && validateField("dob")}
+    className={`w-full px-4 py-2 border-2 rounded tracking-widest font-mono text-lg sm:text-xl focus:outline-none ${
+      errors.dob
+        ? "border-red-500 focus:ring-2 focus:ring-red-500"
+        : "border-gray-500 focus:ring-2 focus:ring-blue-700"
+    }`}
+  />
+  {errors.dob && (
+    <p className="text-red-500 text-sm mt-1">Fill out this field</p>
+  )}
+</div>
+
 
           {/* SSN */}
           <div className="w-full">
