@@ -98,7 +98,7 @@ const Personal = () => {
               onBlur={() =>
                 currentErrorField === "father" && validateField("father")
               }
-              className={`w-full px-4 py-2 border-2 rounded-md tracking-widest font-mono text-lg sm:text-xl focus:outline-none ${
+              className={`w-full px-4 py-2 border-2 border-gray-500 rounded-md tracking-widest font-mono text-lg sm:text-xl focus:outline-none ${
                 errors.father
                   ? "border-red-500 focus:ring-2 focus:ring-red-500"
                   : "border-gray-300 focus:ring-2 focus:ring-blue-600"

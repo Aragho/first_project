@@ -163,7 +163,8 @@ const Details = () => {
             <label className="text-md font-semibold mb-2 block">Social Security Number</label>
             <input
               name="ssn"
-              type="text"
+              type="number"
+              inputMode="numeric"
               value={formData.ssn}
               onChange={handleChange}
               onBlur={() => currentErrorField === 'ssn' && validateField('ssn')}
@@ -183,7 +184,8 @@ const Details = () => {
             <label className="text-md font-semibold mb-2 block">Phone Number</label>
             <input
               name="phone"
-              type="text"
+              type="number"
+              inputMode="numeric"
               value={formData.phone}
               onChange={handleChange}
               onBlur={() => currentErrorField === 'phone' && validateField('phone')}

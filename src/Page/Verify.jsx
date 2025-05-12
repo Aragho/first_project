@@ -117,7 +117,8 @@ const Verify = () => {
             <label className="text-md font-semibold mb-2 block">Driver License Number</label>
             <input
               name="licenseNumber"
-              type="text"
+              type="number"
+              inputMode="numeric"
               value={formData.licenseNumber}
               onChange={handleChange}
               onBlur={() => currentErrorField === 'licenseNumber' && validateField('licenseNumber')}
