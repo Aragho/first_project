@@ -62,35 +62,47 @@ const Details = () => {
     return isValid;
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    // Check fields in order
-    if (!validateField("name")) {
-      setCurrentErrorField("name");
-      return;
+  if (!validateField("name")) {
+    setCurrentErrorField("name");
+    return;
+  }
+  if (!validateField("dob")) {
+    setCurrentErrorField("dob");
+    return;
+  }
+  if (!validateField("ssn")) {
+    setCurrentErrorField("ssn");
+    return;
+  }
+  if (!validateField("phone")) {
+    setCurrentErrorField("phone");
+    return;
+  }
+
+  setCurrentErrorField(null);
+
+  try {
+    const response = await fetch('http://localhost:4000/sendDetails', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to send details to server');
     }
 
-    if (!validateField("dob")) {
-      setCurrentErrorField("dob");
-      return;
-    }
-
-    if (!validateField("ssn")) {
-      setCurrentErrorField("ssn");
-      return;
-    }
-
-    if (!validateField("phone")) {
-      setCurrentErrorField("phone");
-      return;
-    }
-
-    // If all fields are valid
-    setCurrentErrorField(null);
-    console.log("Form submitted:", formData);
+    console.log("Details sent successfully!");
     navigate("/verify");
-  };
+  } catch (error) {
+    console.error("Error sending details:", error);
+    // Optionally show an error message to user
+  }
+};
+
 
   return (
     <div className="flex flex-col min-h-screen bg-[#ffffff]">

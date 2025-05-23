@@ -1,101 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import id from "../assets/id.png";
 import download from "../assets/download2.png";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import { useNavigate } from "react-router-dom";
 import { FiCheckCircle } from "react-icons/fi";
 
 const Successful = () => {
-  const [currentErrorField, setCurrentErrorField] = useState(null);
-  const [errors, setErrors] = useState({
-    father: false,
-    mother: false,
-    mothers: false,
-    place: false
-  });
-  const [data, setData] = useState({});
-  const navigate = useNavigate();
-
-
-  const [formData, setFormData] = useState({
-    father: "",
-    mother: "",
-    mothers: "",
-    place: "",
-  });
-
-  const handleDateChange = (date) => {
-    setFormData((prev) => ({
-      ...prev,
-      dob: date,
-    }));
-
-    if (currentErrorField === 'dob') {
-      setErrors((prev) => ({ ...prev, dob: !date }));
-    }
-  };
-
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-
-    if (currentErrorField === name) {
-      setErrors((prev) => ({ ...prev, [name]: !value.trim() }));
-    }
-  };
-
-  const validateField = (fieldName) => {
-    let isValid = false;
-    
-    if (fieldName === 'father') {
-      isValid = formData.name.trim() !== '';
-    } else if (fieldName === 'mother') {
-      isValid = formData.dob !== null;
-    } else if (fieldName === 'mothers') {
-      isValid = formData.ssn.trim() !== '';
-    } else if (fieldName === 'place') {
-      isValid = formData.phone.trim() !== '';
-    }
-
-    setErrors((prev) => ({ ...prev, [fieldName]: !isValid }));
-    return isValid;
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    
-    // Check fields in order
-    if (!validateField('father')) {
-      setCurrentErrorField('father');
-      return;
-    }
-    
-    if (!validateField('dob')) {
-      setCurrentErrorField('mother');
-      return;
-    }
-    
-    if (!validateField('mothers')) {
-      setCurrentErrorField('mothers');
-      return;
-    }
-    
-    if (!validateField('place')) {
-      setCurrentErrorField('place');
-      return;
-    }
-
-
-    // If all fields are valid
-    setCurrentErrorField(null);
-    console.log('Form submitted:', formData);
-    navigate("/verify");
-  };
-
   return (
     <div className="flex flex-col min-h-screen bg-[#ffffff]">
       {/* Header */}
@@ -105,16 +13,15 @@ const Successful = () => {
         <img src={download} alt="Download Icon" className="w-24" />
       </div>
 
+      {/* Success message */}
       <div className="w-full gap-3 max-w-[500px] bg-white px-4 py-6 sm:px-8 sm:py-10 rounded-xl shadow-lg border border-gray-300 mx-auto flex flex-col items-center">
         <h1 className="text-2xl sm:text-xl font-bold text-center mb-4 sm:mb-8">
-         VERIFIED SUCCESSFULLY
+          VERIFIED SUCCESSFULLY
         </h1>
         <FiCheckCircle className="text-[#02579b]" size={60} />
-
-
-        <h1 className="text-[#02579b] text-[15px] font-semibold">Your Identity has been verified successfully</h1>
-
-      
+        <h1 className="text-[#02579b] text-[15px] font-semibold mt-2">
+          Your Identity has been verified successfully
+        </h1>
       </div>
 
       {/* Footer */}

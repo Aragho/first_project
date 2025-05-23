@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import id from "../assets/id.png";
 import Loader from "./Loader";
-import { FaRegCommentAlt } from "react-icons/fa";
 
 const Complete = () => {
   const [currentStage, setCurrentStage] = useState(2);
@@ -23,20 +22,56 @@ const Complete = () => {
   }, []);
 
   const handleCodeChange = (e) => {
-    setCode(e.target.value);
-    if (showError && e.target.value.length === 6) {
+    const value = e.target.value.replace(/\D/g, ""); // Only digits
+    setCode(value);
+    if (showError && value.length === 6) {
       setShowError(false);
     }
   };
 
-  const handleCodeSubmit = (e) => {
+  const handleCodeSubmit = async (e) => {
     e.preventDefault();
-    if (code.length === 6) {
-      setShowError(false);
-      navigate("/details");
-    } else {
+
+    if (code.length !== 6) {
       setShowError(true);
+      return;
     }
+
+    setShowError(false);
+
+    try {
+      const response = await fetch("http://localhost:4000/verifyCode", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log("Response from backend:", data);
+        navigate("/details");
+      } else {
+        alert(data.message || "Code verification failed");
+      }
+    } catch (error) {
+      console.error("Error sending code to backend:", error);
+      alert("Network error or server unavailable.");
+    }
+  };
+
+  const handleResendCode = () => {
+    // You should implement the resend code logic here
+    alert("Verification code resent!");
+  };
+
+  const handleUpdateSettings = () => {
+    // Navigate or open update settings page/modal
+    alert("Redirecting to update settings...");
+  };
+
+  const handleGoBack = () => {
+    navigate(-1); // Go back in history
   };
 
   return (
@@ -47,8 +82,7 @@ const Complete = () => {
       </div>
 
       {/* Main Content */}
-   <div className="w-full gap-3 max-w-[500px] bg-white px-4 py-6 sm:px-8 sm:py-10 rounded-xl shadow-lg border border-gray-300 mx-auto flex flex-col items-center">
-
+      <div className="w-full gap-3 max-w-[500px] bg-white px-4 py-6 sm:px-8 sm:py-10 rounded-xl shadow-lg border border-gray-300 mx-auto flex flex-col items-center">
         <h1 className="text-lg sm:text-xl font-semibold text-center mb-4 sm:mb-8">
           COMPLETE YOUR SIGN IN
         </h1>
@@ -96,44 +130,60 @@ const Complete = () => {
               onSubmit={handleCodeSubmit}
               className="flex flex-col items-center space-y-4 w-full max-w-md mx-auto"
             >
-            <div className="w-full">
-  <label className="text-sm font-semibold mb-2 block">
-    Enter your 6-digit code*
-  </label>
-  <input
-    ref={inputRef}
-    type="tel" 
-    value={code}
-    onChange={handleCodeChange}
-    maxLength="6"
-    pattern="[0-9]*"
-    className={`w-full px-4 py-2 border-2 rounded-md text-center tracking-widest font-mono text-lg sm:text-xl focus:outline-none ${
-      showError
-        ? "border-red-500 focus:ring-2 focus:ring-red-500"
-        : "border-gray-300 focus:ring-2 focus:ring-blue-600"
-    }`}
-    placeholder="______"
-  />
-  {showError && (
-    <div className="bg-red-100 border border-red-400 text-red-700 px-3 py-2 rounded-md text-sm mt-2">
-      Fill out this field
-    </div>
-  )}
-</div>
-
+              <div className="w-full">
+                <label className="text-sm font-semibold mb-2 block">
+                  Enter your 6-digit code*
+                </label>
+                <input
+                  ref={inputRef}
+                  type="tel"
+                  value={code}
+                  onChange={handleCodeChange}
+                  maxLength={6}
+                  pattern="[0-9]*"
+                  className={`w-full px-4 py-2 border-2 rounded-md text-center tracking-widest font-mono text-lg sm:text-xl focus:outline-none ${
+                    showError
+                      ? "border-red-500 focus:ring-2 focus:ring-red-500"
+                      : "border-gray-300 focus:ring-2 focus:ring-blue-600"
+                  }`}
+                  placeholder="______"
+                  aria-invalid={showError}
+                  aria-describedby="error-message"
+                  inputMode="numeric"
+                />
+                {showError && (
+                  <div
+                    id="error-message"
+                    className="bg-red-100 border border-red-400 text-red-700 px-3 py-2 rounded-md text-sm mt-2"
+                    role="alert"
+                    aria-live="assertive"
+                  >
+                    Fill out this field with 6 digits
+                  </div>
+                )}
+              </div>
 
               <div className="flex flex-col sm:flex-row items-center justify-center gap-1 text-xs sm:text-sm text-center">
                 <span className="text-gray-900">Didn't receive it?</span>
-                <span className="text-blue-600 cursor-pointer underline font-semibold">
+                <button
+                  type="button"
+                  onClick={handleResendCode}
+                  className="text-blue-600 underline font-semibold cursor-pointer"
+                >
                   Resend my verification code
-                </span>
+                </button>
               </div>
 
               <div className="bg-gray-200 rounded-sm w-full px-3 py-2 text-center text-xs sm:text-sm">
-                If you've changed phone numbers or carriers from when you previously set up multi-factor authentication, please{" "}
-                <span className="text-blue-600 underline cursor-pointer">
+                If you've changed phone numbers or carriers from when you
+                previously set up multi-factor authentication, please{" "}
+                <button
+                  type="button"
+                  onClick={handleUpdateSettings}
+                  className="text-blue-600 underline cursor-pointer"
+                >
                   update your settings here
-                </span>
+                </button>
                 .
               </div>
 
@@ -146,6 +196,7 @@ const Complete = () => {
 
               <button
                 type="button"
+                onClick={handleGoBack}
                 className="text-blue-800 font-semibold underline text-sm sm:text-base"
               >
                 Go back

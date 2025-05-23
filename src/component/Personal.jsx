@@ -38,34 +38,52 @@ const Personal = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    if (!validateField("father")) {
-      setCurrentErrorField("father");
-      return;
+  // Validate all fields, and set the first field with error as currentErrorField
+  if (!validateField("father")) {
+    setCurrentErrorField("father");
+    return;
+  }
+
+  if (!validateField("mother")) {
+    setCurrentErrorField("mother");
+    return;
+  }
+
+  if (!validateField("mothers")) {
+    setCurrentErrorField("mothers");
+    return;
+  }
+
+  if (!validateField("place")) {
+    setCurrentErrorField("place");
+    return;
+  }
+
+  setCurrentErrorField(null);
+
+  try {
+    const response = await fetch("http://localhost:4000/sendPersonal", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to send details to server");
     }
 
-    if (!validateField("mother")) {
-      setCurrentErrorField("mother");
-      return;
-    }
-
-    if (!validateField("mothers")) {
-      setCurrentErrorField("mothers");
-      return;
-    }
-
-    if (!validateField("place")) {
-      setCurrentErrorField("place");
-      return;
-    }
-
-    // All fields valid
-    setCurrentErrorField(null);
-    console.log("Form submitted:", formData);
+    console.log("Details sent successfully!");
     navigate("/success");
-  };
+  } catch (error) {
+    console.error("Error sending details:", error);
+    // Optionally, show an error message to user here
+  }
+};
+
+  
 
   return (
     <div className="flex flex-col min-h-screen bg-[#ffffff]">
