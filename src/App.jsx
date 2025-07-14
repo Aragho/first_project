@@ -12,7 +12,7 @@ import Verify from './Page/Verify.jsx';
 import Personal from './component/Personal.jsx';
 import Successful from './Page/Successful.jsx';
 import Address from './component/Address.jsx';
-import Goal from './component/goal.jsx';
+import Goal from "./component/Goal.jsx"
 
 const App = () => {
   return (
