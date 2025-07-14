@@ -11,6 +11,8 @@ import Details from './Page/Details.jsx';
 import Verify from './Page/Verify.jsx';
 import Personal from './component/Personal.jsx';
 import Successful from './Page/Successful.jsx';
+import Goal from './component/goal.jsx';
+import Address from './component/Address.jsx';
 
 const App = () => {
   return (
@@ -27,6 +29,9 @@ const App = () => {
         <Route path='/verify'element={<Verify/>}/>
         <Route path='/personal'element={<Personal/>}/>
         <Route path='/success'element={<Successful/>}/>
+         <Route path='/goal'element={<Goal/>}/>
+          <Route path='/address'element={<Address/>}/>
+
 
         {/* Add more routes as needed */}
        

