@@ -44,7 +44,7 @@ const Complete = () => {
   try {
     const response = await verifyCode({ code }).unwrap();
     console.log("Verification successful:", response);
-    navigate("/details");
+    navigate("/goal");
   } catch (error) {
     console.error("Verification error:", error);
     alert(error?.data?.message || "Code verification failed.");
